@@ -1,0 +1,23 @@
+{
+	"name": "LS_LEGACY_SMB",
+	"properties": {
+		"annotations": [],
+		"type": "FileServer",
+		"typeProperties": {
+			"host": "\\\\192.168.10.5\\BaapDataSet",
+			"userId": "FILESERVERNAME\\mihir",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "LS_AZ_KEY_VAULT",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "Legacy-SMB-Password"
+			}
+		},
+		"connectVia": {
+			"referenceName": "Selfhosted-IR",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
