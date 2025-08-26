@@ -1,0 +1,11 @@
+{
+	"name": "LS_AZ_KEY_VAULT",
+	"properties": {
+		"description": "This linked service allows connection to KV which holds secrets and is more secure option opposed to having passwords and secrets in plain string",
+		"annotations": [],
+		"type": "AzureKeyVault",
+		"typeProperties": {
+			"baseUrl": "https://de-kv-aues-medp.vault.azure.net/"
+		}
+	}
+}
