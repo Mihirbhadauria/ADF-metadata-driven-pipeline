@@ -1,0 +1,32 @@
+{
+	"name": "LS_ODBC_LEGACY_SQL",
+	"properties": {
+		"description": "The purpose of this linked service is to connect to Legacy SQL instances",
+		"annotations": [],
+		"type": "Odbc",
+		"typeProperties": {
+			"connectionString": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "LS_AZ_KEY_VAULT",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "Legacy-SQL-ConnectionString"
+			},
+			"authenticationType": "Basic",
+			"userName": "adf_instance",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "LS_AZ_KEY_VAULT",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "Legacy-SQL-Password"
+			}
+		},
+		"connectVia": {
+			"referenceName": "Selfhosted-IR",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
