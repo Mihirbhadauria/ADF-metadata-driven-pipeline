@@ -1,0 +1,14 @@
+{
+	"name": "LS_ADLS",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "https://deadlsauesmdp.dfs.core.windows.net/"
+		},
+		"connectVia": {
+			"referenceName": "Selfhosted-IR",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
