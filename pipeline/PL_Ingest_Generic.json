@@ -17,7 +17,10 @@
 				"typeProperties": {
 					"source": {
 						"type": "OdbcSource",
-						"query": "@concat(\n  'SELECT * FROM dbo.md_Source WHERE 1=1',\n  if(pipeline().parameters.pActiveOnly, ' AND Active = 1', ''),\n  if(\n    equals(pipeline().parameters.pSourceName, ''),\n    '',\n    concat(' AND SourceName = ''', pipeline().parameters.pSourceName, '''')\n  )\n)\n",
+						"query": {
+							"value": "@concat(\n  'SELECT * FROM dbo.md_Source WHERE Active = 1',\n  if(\n    equals(pipeline().parameters.pSourceName, ''),\n    '',\n    concat(' AND SourceName = ''', pipeline().parameters.pSourceName, '''')\n  )\n)\n",
+							"type": "Expression"
+						},
 						"queryTimeout": "02:00:00"
 					},
 					"dataset": {
@@ -40,6 +43,10 @@
 			"pRunDate": {
 				"type": "string",
 				"defaultValue": "@{utcNow()}"
+			},
+			"pActiveOnly": {
+				"type": "string",
+				"defaultValue": "1"
 			}
 		},
 		"variables": {
