@@ -6,7 +6,13 @@
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
-			"TableName": {
+			"pTable": {
+				"type": "string"
+			},
+			"pWhere": {
+				"type": "string"
+			},
+			"pQueryMode": {
 				"type": "string"
 			}
 		},
@@ -15,7 +21,7 @@
 		"schema": [],
 		"typeProperties": {
 			"tableName": {
-				"value": "@dataset().TableName",
+				"value": "@dataset().pTable",
 				"type": "Expression"
 			}
 		}
