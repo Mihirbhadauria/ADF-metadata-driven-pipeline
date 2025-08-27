@@ -1,0 +1,36 @@
+{
+	"name": "LS_SQL",
+	"properties": {
+		"parameters": {
+			"pSystem": {
+				"type": "string",
+				"defaultValue": "modern"
+			}
+		},
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"server": "@{if(\n    equals(linkedService().pSystem, 'legacy'),\n    'BAAP-WIN11-VM',\n    if(\n        equals(linkedService().pSystem, 'modern'),\n        '192.168.10.235',\n        ''\n    )\n)}",
+			"database": "@{if(\n    equals(linkedService().pSystem, 'legacy'),\n    'LegacyHR',\n    if(\n        equals(linkedService().pSystem, 'modern'),\n        'de_ODS',\n        ''\n    )\n)}",
+			"encrypt": "mandatory",
+			"trustServerCertificate": true,
+			"authenticationType": "SQL",
+			"userName": "@{if(\n    equals(linkedService().pSystem, 'legacy'),\n    'adf_instance',\n    if(\n        equals(linkedService().pSystem, 'modern'),\n        'sa',\n        ''\n    )\n)}",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "LS_AZ_KEY_VAULT",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": {
+					"value": "@if(\n    equals(linkedService().pSystem, 'legacy'),\n    'Legacy-SQL-Password',\n    if(\n        equals(linkedService().pSystem, 'modern'),\n        'Modern-SQL-Password',\n        ''\n    )\n)",
+					"type": "Expression"
+				}
+			}
+		},
+		"connectVia": {
+			"referenceName": "Selfhosted-IR",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
