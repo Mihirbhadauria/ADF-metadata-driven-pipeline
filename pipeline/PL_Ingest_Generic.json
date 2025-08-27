@@ -24,7 +24,7 @@
 						"queryTimeout": "02:00:00"
 					},
 					"dataset": {
-						"referenceName": "DS_SQL",
+						"referenceName": "DS_ODBC_SQL",
 						"type": "DatasetReference",
 						"parameters": {
 							"pTable": "dbo.md_Source",

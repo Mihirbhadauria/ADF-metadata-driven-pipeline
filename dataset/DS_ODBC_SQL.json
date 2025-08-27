@@ -1,5 +1,5 @@
 {
-	"name": "DS_SQL",
+	"name": "DS_ODBC_SQL",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "LS_ODBC_LEGACY_SQL",

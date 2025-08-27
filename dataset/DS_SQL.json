@@ -1,0 +1,23 @@
+{
+	"name": "DS_SQL",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_SQL",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"pSystem": {
+					"value": "@dataset().param_System",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"param_System": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": []
+	}
+}
