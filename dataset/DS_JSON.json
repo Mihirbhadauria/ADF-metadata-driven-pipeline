@@ -1,0 +1,20 @@
+{
+	"name": "DS_JSON",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_REST",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"pRelativeUrl": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"typeProperties": {
+			"relativeUrl": "@{coalesce(dataset().pRelativeUrl, 'latest')}"
+		},
+		"schema": []
+	}
+}
