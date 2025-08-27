@@ -6,10 +6,16 @@
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
-			"Folder": {
+			"pDir": {
 				"type": "string"
 			},
-			"FileName": {
+			"pFileName": {
+				"type": "string"
+			},
+			"pHeader": {
+				"type": "bool"
+			},
+			"pDelimiter": {
 				"type": "string"
 			}
 		},
@@ -19,17 +25,23 @@
 			"location": {
 				"type": "FileServerLocation",
 				"fileName": {
-					"value": "@dataset().FileName",
+					"value": "@dataset().pFileName",
 					"type": "Expression"
 				},
 				"folderPath": {
-					"value": "@dataset().Folder",
+					"value": "@dataset().pDir",
 					"type": "Expression"
 				}
 			},
-			"columnDelimiter": ",",
+			"columnDelimiter": {
+				"value": "@dataset().pDelimiter",
+				"type": "Expression"
+			},
 			"escapeChar": "\\",
-			"firstRowAsHeader": true,
+			"firstRowAsHeader": {
+				"value": "@dataset().pHeader",
+				"type": "Expression"
+			},
 			"quoteChar": "\""
 		},
 		"schema": []
