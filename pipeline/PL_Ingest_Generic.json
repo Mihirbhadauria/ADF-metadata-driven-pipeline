@@ -1,0 +1,52 @@
+{
+	"name": "PL_Ingest_Generic",
+	"properties": {
+		"activities": [
+			{
+				"name": "Lookup - Get Sources",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "OdbcSource",
+						"query": "@concat(\n  'SELECT * FROM dbo.md_Source WHERE 1=1',\n  if(pipeline().parameters.pActiveOnly, ' AND Active = 1', ''),\n  if(\n    equals(pipeline().parameters.pSourceName, ''),\n    '',\n    concat(' AND SourceName = ''', pipeline().parameters.pSourceName, '''')\n  )\n)\n",
+						"queryTimeout": "02:00:00"
+					},
+					"dataset": {
+						"referenceName": "DS_SQL",
+						"type": "DatasetReference",
+						"parameters": {
+							"pTable": "dbo.md_Source",
+							"pWhere": "''",
+							"pQueryMode": "Query"
+						}
+					},
+					"firstRowOnly": false
+				}
+			}
+		],
+		"parameters": {
+			"pSourceName": {
+				"type": "string"
+			},
+			"pRunDate": {
+				"type": "string",
+				"defaultValue": "@{utcNow()}"
+			}
+		},
+		"variables": {
+			"vWaterMark": {
+				"type": "String"
+			}
+		},
+		"annotations": []
+	}
+}
