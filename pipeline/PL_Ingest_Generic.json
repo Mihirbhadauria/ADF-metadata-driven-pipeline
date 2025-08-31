@@ -69,14 +69,7 @@
 											{
 												"name": "Source to ADLS",
 												"type": "Copy",
-												"dependsOn": [
-													{
-														"activity": "Set variable1",
-														"dependencyConditions": [
-															"Succeeded"
-														]
-													}
-												],
+												"dependsOn": [],
 												"policy": {
 													"timeout": "0.12:00:00",
 													"retry": 0,
@@ -114,7 +107,7 @@
 														"referenceName": "DS_ODBC_SQL",
 														"type": "DatasetReference",
 														"parameters": {
-															"pTable": "dbo.Employee",
+															"pTable": "@variables('vSourceObject').ObjectOrPath",
 															"pWhere": "''",
 															"pQueryMode": "''"
 														}
@@ -127,26 +120,12 @@
 														"parameters": {
 															"pFolder": "hr/employees",
 															"pFileName": {
-																"value": "employees_@{formatDateTime(utcNow(), 'yyyyMMddHHmmss')}.parquet",
+																"value": "@variables('var_SourceObject').ObjectOrPath",
 																"type": "Expression"
 															}
 														}
 													}
 												]
-											},
-											{
-												"name": "Set variable1",
-												"type": "SetVariable",
-												"dependsOn": [],
-												"policy": {
-													"secureOutput": false,
-													"secureInput": false
-												},
-												"userProperties": [],
-												"typeProperties": {
-													"variableName": "test",
-													"value": "@base64(item().SourceName)"
-												}
 											}
 										]
 									},
