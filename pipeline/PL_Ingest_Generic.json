@@ -115,7 +115,7 @@
 														"type": "DatasetReference",
 														"parameters": {
 															"pTable": {
-																"value": "@variables('var_SourceObject').ObjectOrPath",
+																"value": "@json(variables('var_SourceObject')).ObjectOrPath\n",
 																"type": "Expression"
 															},
 															"pWhere": "''",
@@ -129,15 +129,15 @@
 														"type": "DatasetReference",
 														"parameters": {
 															"pSource": {
-																"value": "@split(variables('var_SourceObject').TargetPath, '/')[1]",
+																"value": "@split(json(variables('var_SourceObject')).TargetPath\n, '/')[1]",
 																"type": "Expression"
 															},
 															"pFolder": {
-																"value": "@concat(split(variables('var_SourceObject').TargetPath, '/')[2], '/', split(variables('var_SourceObject').TargetPath, '/')[3])\n",
+																"value": "@concat(\n    split(json(variables('var_SourceObject')).TargetPath, '/')[2],\n    '/',\n    split(json(variables('var_SourceObject')).TargetPath, '/')[3]\n)\n",
 																"type": "Expression"
 															},
 															"pFileName": {
-																"value": "@variables('var_SourceObject').ObjectOrPath",
+																"value": "@json(variables('var_SourceObject')).SourceName",
 																"type": "Expression"
 															}
 														}
