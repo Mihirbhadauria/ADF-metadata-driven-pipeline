@@ -69,7 +69,14 @@
 											{
 												"name": "Source to ADLS",
 												"type": "Copy",
-												"dependsOn": [],
+												"dependsOn": [
+													{
+														"activity": "Set variable1",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
 												"policy": {
 													"timeout": "0.12:00:00",
 													"retry": 0,
@@ -127,6 +134,20 @@
 														}
 													}
 												]
+											},
+											{
+												"name": "Set variable1",
+												"type": "SetVariable",
+												"dependsOn": [],
+												"policy": {
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"variableName": "test",
+													"value": "@base64(item().SourceName)"
+												}
 											}
 										]
 									}
@@ -153,6 +174,9 @@
 		},
 		"variables": {
 			"vWaterMark": {
+				"type": "String"
+			},
+			"test": {
 				"type": "String"
 			}
 		},
