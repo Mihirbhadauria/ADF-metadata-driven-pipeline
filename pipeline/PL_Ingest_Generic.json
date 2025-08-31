@@ -121,7 +121,7 @@
 															"pSource": "bronze",
 															"pFolder": "hr/employees",
 															"pFileName": {
-																"value": "@{trim(concat(item().SourceName, '_', formatDateTime(utcNow(), 'yyyyMMddHHmmss'), '.parquet'))}\n",
+																"value": "@{concat(\n    replace(replace(trim(item().SourceName), '\\r', ''), '\\n', ''),\n    '_',\n    formatDateTime(utcNow(), 'yyyyMMddHHmmss'),\n    '.parquet'\n)}\n",
 																"type": "Expression"
 															}
 														}
