@@ -107,7 +107,7 @@
 														"referenceName": "DS_ODBC_SQL",
 														"type": "DatasetReference",
 														"parameters": {
-															"pTable": "dbo.Employees",
+															"pTable": "dbo.Employee",
 															"pWhere": "''",
 															"pQueryMode": "Table"
 														}
