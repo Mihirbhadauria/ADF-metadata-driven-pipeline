@@ -55,7 +55,14 @@
 						{
 							"name": "Switch based on source",
 							"type": "Switch",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "Capture array from md_Source",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"userProperties": [],
 							"typeProperties": {
 								"on": {
@@ -118,6 +125,10 @@
 														"referenceName": "DS_ADLS_PARQUET",
 														"type": "DatasetReference",
 														"parameters": {
+															"pSource": {
+																"value": "@split(@variables('var_SourceObject').TargetPath, '/').[0]",
+																"type": "Expression"
+															},
 															"pFolder": "hr/employees",
 															"pFileName": {
 																"value": "@variables('var_SourceObject').ObjectOrPath",
@@ -178,7 +189,7 @@
 				"type": "String"
 			},
 			"var_SourceObject": {
-				"type": "String"
+				"type": "Array"
 			}
 		},
 		"annotations": []
