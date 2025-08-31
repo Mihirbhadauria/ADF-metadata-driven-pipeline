@@ -195,27 +195,31 @@
 												"inputs": [
 													{
 														"referenceName": "DS_SMB_CSV",
-														"type": "DatasetReference"
+														"type": "DatasetReference",
+														"parameters": {
+															"pDir": {
+																"value": "@split(json(variables('var_SourceObject')).ObjectOrPath\n, '\\')[3]",
+																"type": "Expression"
+															},
+															"pFileName": {
+																"value": "@json(variables('var_SourceObject')).SourceName",
+																"type": "Expression"
+															},
+															"pHeader": {
+																"value": "@split(json(variables('var_SourceObject')).QueryOrParams\n, ';')[1]",
+																"type": "Expression"
+															},
+															"pDelimiter": {
+																"value": "@split(json(variables('var_SourceObject')).QueryOrParams\n, ';')[0]",
+																"type": "Expression"
+															}
+														}
 													}
 												],
 												"outputs": [
 													{
 														"referenceName": "DS_ADLS_PARQUET",
-														"type": "DatasetReference",
-														"parameters": {
-															"pSource": {
-																"value": "@split(json(variables('var_SourceObject')).TargetPath\n, '/')[1]",
-																"type": "Expression"
-															},
-															"pFolder": {
-																"value": "@concat(\n    split(json(variables('var_SourceObject')).TargetPath, '/')[2],\n    '/',\n    split(json(variables('var_SourceObject')).TargetPath, '/')[3]\n)\n",
-																"type": "Expression"
-															},
-															"pFileName": {
-																"value": "@concat(\n    json(variables('var_SourceObject')).SourceName,\n    '_',\n    formatDateTime(utcNow(), 'yyyyMMddHHmmss')\n)",
-																"type": "Expression"
-															}
-														}
+														"type": "DatasetReference"
 													}
 												]
 											}
