@@ -18,7 +18,7 @@
 					"source": {
 						"type": "SqlServerSource",
 						"sqlReaderQuery": {
-							"value": "@concat(\n  'SELECT * FROM dbo.md_Source WHERE Active = 1 AND SourceType =',\n  pipeline().parameters.pSourceName\n)",
+							"value": "SELECT * FROM dbo.md_Source WHERE Active = 1 AND SourceType =\n  '@{pipeline().parameters.pSourceName}'\n",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
