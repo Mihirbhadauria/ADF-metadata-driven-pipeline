@@ -45,7 +45,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Lookup - Get Sources').output.value",
+						"value": "@array(activity('Lookup - Get Sources').output)",
 						"type": "Expression"
 					},
 					"activities": [
@@ -136,7 +136,8 @@
 		],
 		"parameters": {
 			"pSourceName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "ODBC"
 			},
 			"pRunDate": {
 				"type": "string",
