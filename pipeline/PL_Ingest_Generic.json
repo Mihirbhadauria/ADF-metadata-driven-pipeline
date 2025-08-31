@@ -109,7 +109,7 @@
 														"parameters": {
 															"pTable": "dbo.Employee",
 															"pWhere": "''",
-															"pQueryMode": "Table"
+															"pQueryMode": "''"
 														}
 													}
 												],
