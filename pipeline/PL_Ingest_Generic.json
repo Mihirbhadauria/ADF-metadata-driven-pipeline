@@ -55,7 +55,17 @@
 							"dependsOn": [],
 							"userProperties": [],
 							"typeProperties": {
-								"cases": []
+								"cases": [
+									{
+										"value": "ODBC"
+									},
+									{
+										"value": "SMB"
+									},
+									{
+										"value": "REST"
+									}
+								]
 							}
 						}
 					]
