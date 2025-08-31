@@ -118,7 +118,7 @@
 															"pSource": "bronze",
 															"pFolder": "hr/employees",
 															"pFileName": {
-																"value": "employees_@{utcNow()}",
+																"value": "employees_@{pipeline().parameters.pRunDate}",
 																"type": "Expression"
 															}
 														}
