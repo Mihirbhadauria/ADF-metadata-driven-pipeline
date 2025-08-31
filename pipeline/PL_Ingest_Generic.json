@@ -147,7 +147,79 @@
 										]
 									},
 									{
-										"value": "SMB"
+										"value": "SMB",
+										"activities": [
+											{
+												"name": "Source to ADLS SMB",
+												"type": "Copy",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "0.12:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"source": {
+														"type": "DelimitedTextSource",
+														"storeSettings": {
+															"type": "FileServerReadSettings",
+															"recursive": true,
+															"enablePartitionDiscovery": false
+														},
+														"formatSettings": {
+															"type": "DelimitedTextReadSettings"
+														}
+													},
+													"sink": {
+														"type": "ParquetSink",
+														"storeSettings": {
+															"type": "AzureBlobFSWriteSettings"
+														},
+														"formatSettings": {
+															"type": "ParquetWriteSettings"
+														}
+													},
+													"enableStaging": false,
+													"translator": {
+														"type": "TabularTranslator",
+														"typeConversion": true,
+														"typeConversionSettings": {
+															"allowDataTruncation": true,
+															"treatBooleanAsNumber": false
+														}
+													}
+												},
+												"inputs": [
+													{
+														"referenceName": "DS_SMB_CSV",
+														"type": "DatasetReference"
+													}
+												],
+												"outputs": [
+													{
+														"referenceName": "DS_ADLS_PARQUET",
+														"type": "DatasetReference",
+														"parameters": {
+															"pSource": {
+																"value": "@split(json(variables('var_SourceObject')).TargetPath\n, '/')[1]",
+																"type": "Expression"
+															},
+															"pFolder": {
+																"value": "@concat(\n    split(json(variables('var_SourceObject')).TargetPath, '/')[2],\n    '/',\n    split(json(variables('var_SourceObject')).TargetPath, '/')[3]\n)\n",
+																"type": "Expression"
+															},
+															"pFileName": {
+																"value": "@concat(\n    json(variables('var_SourceObject')).SourceName,\n    '_',\n    formatDateTime(utcNow(), 'yyyyMMddHHmmss')\n)",
+																"type": "Expression"
+															}
+														}
+													}
+												]
+											}
+										]
 									}
 								]
 							}
