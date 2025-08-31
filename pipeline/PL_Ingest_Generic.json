@@ -137,7 +137,7 @@
 																"type": "Expression"
 															},
 															"pFileName": {
-																"value": "@json(variables('var_SourceObject')).SourceName",
+																"value": "@concat(\n    json(variables('var_SourceObject')).SourceName,\n    '_',\n    formatDateTime(utcNow(), 'yyyyMMddHHmmss')\n)",
 																"type": "Expression"
 															}
 														}
