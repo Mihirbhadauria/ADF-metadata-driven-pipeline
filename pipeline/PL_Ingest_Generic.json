@@ -30,6 +30,36 @@
 					},
 					"firstRowOnly": false
 				}
+			},
+			{
+				"name": "For Each Dataset",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Lookup - Get Sources",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup - Get Sources').output",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Switch based on source",
+							"type": "Switch",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"cases": []
+							}
+						}
+					]
+				}
 			}
 		],
 		"parameters": {
