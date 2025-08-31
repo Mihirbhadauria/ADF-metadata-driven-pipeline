@@ -136,8 +136,7 @@
 		],
 		"parameters": {
 			"pSourceName": {
-				"type": "string",
-				"defaultValue": "ODBC"
+				"type": "string"
 			},
 			"pRunDate": {
 				"type": "string",
