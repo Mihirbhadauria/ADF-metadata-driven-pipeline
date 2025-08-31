@@ -67,7 +67,7 @@
 										"value": "ODBC",
 										"activities": [
 											{
-												"name": "Copy data1",
+												"name": "Source to ADLS",
 												"type": "Copy",
 												"dependsOn": [],
 												"policy": {
@@ -121,7 +121,7 @@
 															"pSource": "bronze",
 															"pFolder": "hr/employees",
 															"pFileName": {
-																"value": "employees_@{pipeline().parameters.pRunDate}",
+																"value": "@{concat(item().SourceName, '_', formatDateTime(utcNow(), 'yyyyMMddHHmmss'), '.parquet')}\n",
 																"type": "Expression"
 															}
 														}
