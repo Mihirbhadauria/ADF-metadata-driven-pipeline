@@ -81,9 +81,13 @@
 														"queryTimeout": "02:00:00"
 													},
 													"sink": {
-														"type": "SqlServerSink",
-														"writeBehavior": "insert",
-														"sqlWriterUseTableLock": false
+														"type": "ParquetSink",
+														"storeSettings": {
+															"type": "AzureBlobFSWriteSettings"
+														},
+														"formatSettings": {
+															"type": "ParquetWriteSettings"
+														}
 													},
 													"enableStaging": false,
 													"translator": {
@@ -108,18 +112,20 @@
 												],
 												"outputs": [
 													{
-														"referenceName": "DS_SQL",
-														"type": "DatasetReference"
+														"referenceName": "DS_ADLS_PARQUET",
+														"type": "DatasetReference",
+														"parameters": {
+															"pSource": "bronze",
+															"pFolder": "hr/employees",
+															"pFileName": {
+																"value": "employees_@{utcNow()}",
+																"type": "Expression"
+															}
+														}
 													}
 												]
 											}
 										]
-									},
-									{
-										"value": "SMB"
-									},
-									{
-										"value": "REST"
 									}
 								]
 							}
