@@ -219,7 +219,12 @@
 												"outputs": [
 													{
 														"referenceName": "DS_ADLS_PARQUET",
-														"type": "DatasetReference"
+														"type": "DatasetReference",
+														"parameters": {
+															"pSource": "@split(json(variables('var_SourceObject')).TargetPath , '/')[1]",
+															"pFolder": "@concat(     split(json(variables('var_SourceObject')).TargetPath, '/')[2],     '/',     split(json(variables('var_SourceObject')).TargetPath, '/')[3] )",
+															"pFileName": "@concat(     json(variables('var_SourceObject')).SourceName,     '_',     formatDateTime(utcNow(), 'yyyyMMddHHmmss') )"
+														}
 													}
 												]
 											}
