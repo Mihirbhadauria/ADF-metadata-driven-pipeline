@@ -168,11 +168,11 @@
 															"type": "FileServerReadSettings",
 															"recursive": true,
 															"wildcardFolderPath": {
-																"value": "@concat(     split(json(variables('var_SourceObject')).ObjectOrPath, '\\')[1],     '\\',     split(json(variables('var_SourceObject')).ObjectOrPath, '\\')[2] )",
+																"value": "@concat(     split(json(variables('var_SourceObject')).ObjectOrPath, '\\')[2],     '\\',     split(json(variables('var_SourceObject')).ObjectOrPath, '\\')[3] )",
 																"type": "Expression"
 															},
 															"wildcardFileName": {
-																"value": "@split(json(variables('var_SourceObject')).ObjectOrPath , '\\')[3]",
+																"value": "@split(json(variables('var_SourceObject')).ObjectOrPath , '\\')[4]",
 																"type": "Expression"
 															},
 															"enablePartitionDiscovery": false
@@ -214,11 +214,11 @@
 																"type": "Expression"
 															},
 															"pHeader": {
-																"value": "@split(json(variables('var_SourceObject')).QueryOrParams\n, ';')[1]",
+																"value": "@json(json(variables('var_SourceObject')).QueryOrParams).firstRowAsHeader",
 																"type": "Expression"
 															},
 															"pDelimiter": {
-																"value": "@split(json(variables('var_SourceObject')).QueryOrParams\n, ';')[0]",
+																"value": "@json(json(variables('var_SourceObject')).QueryOrParams).columnDelimiter",
 																"type": "Expression"
 															}
 														}
