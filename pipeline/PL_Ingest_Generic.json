@@ -114,7 +114,10 @@
 														"referenceName": "DS_ODBC_SQL",
 														"type": "DatasetReference",
 														"parameters": {
-															"pTable": "@variables('vSourceObject').ObjectOrPath",
+															"pTable": {
+																"value": "@variables('var_SourceObject').ObjectOrPath",
+																"type": "Expression"
+															},
 															"pWhere": "''",
 															"pQueryMode": "''"
 														}
