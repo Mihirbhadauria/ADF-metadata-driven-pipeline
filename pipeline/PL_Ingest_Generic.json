@@ -161,7 +161,7 @@
 							"typeProperties": {
 								"variableName": "var_SourceObject",
 								"value": {
-									"value": "@item()",
+									"value": "@string(item())",
 									"type": "Expression"
 								}
 							}
@@ -192,7 +192,7 @@
 				"type": "String"
 			},
 			"var_SourceObject": {
-				"type": "Array"
+				"type": "String"
 			}
 		},
 		"annotations": []
