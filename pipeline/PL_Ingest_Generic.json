@@ -17,7 +17,10 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
-						"sqlReaderQuery": "@concat(\n  'SELECT * FROM dbo.md_Source WHERE Active = 1',\n  if(\n    equals(pipeline().parameters.pSourceName, ''),\n    '',\n    concat(' AND SourceName = ''', pipeline().parameters.pSourceName, '''')\n  )\n)\n",
+						"sqlReaderQuery": {
+							"value": "@concat(\n  'SELECT * FROM dbo.md_Source WHERE Active = 1 AND SourceType =',\n  pipeline().parameters.pSourceName\n)",
+							"type": "Expression"
+						},
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
