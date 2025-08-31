@@ -168,7 +168,7 @@
 															"type": "FileServerReadSettings",
 															"recursive": true,
 															"wildcardFolderPath": {
-																"value": "@concat(     split(json(variables('var_SourceObject')).TargetPath, '/')[1],     '/',     split(json(variables('var_SourceObject')).TargetPath, '/')[2] )",
+																"value": "@concat(     split(json(variables('var_SourceObject')).ObjectOrPath, '\\')[1],     '\\',     split(json(variables('var_SourceObject')).ObjectOrPath, '\\')[2] )",
 																"type": "Expression"
 															},
 															"wildcardFileName": {
