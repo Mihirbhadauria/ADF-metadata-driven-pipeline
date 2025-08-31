@@ -4,7 +4,7 @@
 		"annotations": [],
 		"type": "RestService",
 		"typeProperties": {
-			"url": "https://api.frankfurter.dev/",
+			"url": "https://api.frankfurter.dev/v1",
 			"enableServerCertificateValidation": true,
 			"authenticationType": "Anonymous"
 		},
