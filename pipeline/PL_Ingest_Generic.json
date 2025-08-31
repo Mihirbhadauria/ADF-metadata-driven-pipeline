@@ -57,7 +57,7 @@
 							"type": "Switch",
 							"dependsOn": [
 								{
-									"activity": "Capture array from md_Source",
+									"activity": "Capture array from md_Source table",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -242,7 +242,7 @@
 							}
 						},
 						{
-							"name": "Capture array from md_Source",
+							"name": "Capture array from md_Source table",
 							"type": "SetVariable",
 							"dependsOn": [],
 							"policy": {
