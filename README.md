@@ -47,19 +47,7 @@ Set up ADF Pipelines: Import pipelines from this repo into ADF.
 Run Master Pipeline: Triggers ingestion for all active sources dynamically.
 
 🧩 Sample Metadata Row (for SMB)
-{
-  "SourceId": 2,
-  "SourceType": "SMB",
-  "SourceName": "Payroll_Timesheets",
-  "LinkedService": "LS_LEGACY_SMB",
-  "ObjectOrPath": "\\BaapDataSet\payroll\in\Timesheets_*.txt",
-  "QueryOrParams": "{"columnDelimiter": "|", "firstRowAsHeader": true}",
-  "LoadType": "PerFile",
-  "WatermarkCol": null,
-  "TargetPath": "adls:/bronze/payroll/timesheets/",
-  "FileFormat": "parquet",
-  "Active": true
-}
+<pre lang="md"> ```json { "SourceId": 2, "SourceType": "SMB", "SourceName": "Payroll_Timesheets", "LinkedService": "LS_LEGACY_SMB", "ObjectOrPath": "\\\\BaapDataSet\\\\payroll\\\\in\\\\Timesheets_*.txt", "QueryOrParams": "delimiter=|;header=true", "LoadType": "PerFile", "WatermarkCol": null, "TargetPath": "adls:/bronze/payroll/timesheets/", "FileFormat": "parquet", "Active": true } ``` </pre>
 
 👨‍💻 Author
 
