@@ -1,0 +1,748 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "de-adf-aues-mdp"
+		},
+		"LS_ADLS_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://deadlsauesmdp.dfs.core.windows.net/"
+		},
+		"LS_AZ_KEY_VAULT_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://de-kv-aues-medp.vault.azure.net/"
+		},
+		"LS_HTTP_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://api.frankfurter.dev/"
+		},
+		"LS_LEGACY_SMB_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "\\\\192.168.10.5\\BaapDataSet"
+		},
+		"LS_LEGACY_SMB_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "FILESERVERNAME\\mihir"
+		},
+		"LS_ODBC_LEGACY_SQL_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "Legacy-SQL-ConnectionString"
+		},
+		"LS_ODBC_LEGACY_SQL_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "adf_instance"
+		},
+		"LS_REST_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://api.frankfurter.dev/"
+		},
+		"LS_SQL_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "@{if(\n    equals(linkedService().pSystem, 'legacy'),\n    'BAAP-WIN11-VM',\n    if(\n        equals(linkedService().pSystem, 'modern'),\n        '192.168.10.235',\n        ''\n    )\n)}"
+		},
+		"LS_SQL_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "@{if(\n    equals(linkedService().pSystem, 'legacy'),\n    'LegacyHR',\n    if(\n        equals(linkedService().pSystem, 'modern'),\n        'de_ODS',\n        ''\n    )\n)}"
+		},
+		"LS_SQL_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "@{if(\n    equals(linkedService().pSystem, 'legacy'),\n    'adf_instance',\n    if(\n        equals(linkedService().pSystem, 'modern'),\n        'sa',\n        ''\n    )\n)}"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_Ingest_Generic')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Lookup - Get Sources",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": {
+									"value": "SELECT * FROM dbo.md_Source WHERE Active = 1 AND SourceType =\n  '@{pipeline().parameters.pSourceName}'\n",
+									"type": "Expression"
+								},
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "DS_SQL",
+								"type": "DatasetReference",
+								"parameters": {
+									"param_System": "modern"
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "For Each Dataset",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup - Get Sources",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup - Get Sources').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Switch based on source",
+									"type": "Switch",
+									"dependsOn": [
+										{
+											"activity": "Capture array from md_Source",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"on": {
+											"value": "@item().SourceType",
+											"type": "Expression"
+										},
+										"cases": [
+											{
+												"value": "ODBC",
+												"activities": [
+													{
+														"name": "Source to ADLS",
+														"type": "Copy",
+														"dependsOn": [],
+														"policy": {
+															"timeout": "0.12:00:00",
+															"retry": 0,
+															"retryIntervalInSeconds": 30,
+															"secureOutput": false,
+															"secureInput": false
+														},
+														"userProperties": [],
+														"typeProperties": {
+															"source": {
+																"type": "OdbcSource",
+																"queryTimeout": "02:00:00"
+															},
+															"sink": {
+																"type": "ParquetSink",
+																"storeSettings": {
+																	"type": "AzureBlobFSWriteSettings"
+																},
+																"formatSettings": {
+																	"type": "ParquetWriteSettings"
+																}
+															},
+															"enableStaging": false,
+															"translator": {
+																"type": "TabularTranslator",
+																"typeConversion": true,
+																"typeConversionSettings": {
+																	"allowDataTruncation": true,
+																	"treatBooleanAsNumber": false
+																}
+															}
+														},
+														"inputs": [
+															{
+																"referenceName": "DS_ODBC_SQL",
+																"type": "DatasetReference",
+																"parameters": {
+																	"pTable": {
+																		"value": "@json(variables('var_SourceObject')).ObjectOrPath\n",
+																		"type": "Expression"
+																	},
+																	"pWhere": "''",
+																	"pQueryMode": "''"
+																}
+															}
+														],
+														"outputs": [
+															{
+																"referenceName": "DS_ADLS_PARQUET",
+																"type": "DatasetReference",
+																"parameters": {
+																	"pSource": {
+																		"value": "@split(json(variables('var_SourceObject')).TargetPath\n, '/')[1]",
+																		"type": "Expression"
+																	},
+																	"pFolder": {
+																		"value": "@concat(\n    split(json(variables('var_SourceObject')).TargetPath, '/')[2],\n    '/',\n    split(json(variables('var_SourceObject')).TargetPath, '/')[3]\n)\n",
+																		"type": "Expression"
+																	},
+																	"pFileName": {
+																		"value": "@concat(\n    json(variables('var_SourceObject')).SourceName,\n    '_',\n    formatDateTime(utcNow(), 'yyyyMMddHHmmss')\n)",
+																		"type": "Expression"
+																	}
+																}
+															}
+														]
+													}
+												]
+											},
+											{
+												"value": "SMB",
+												"activities": [
+													{
+														"name": "Source to ADLS SMB",
+														"type": "Copy",
+														"dependsOn": [],
+														"policy": {
+															"timeout": "0.12:00:00",
+															"retry": 0,
+															"retryIntervalInSeconds": 30,
+															"secureOutput": false,
+															"secureInput": false
+														},
+														"userProperties": [],
+														"typeProperties": {
+															"source": {
+																"type": "DelimitedTextSource",
+																"storeSettings": {
+																	"type": "FileServerReadSettings",
+																	"recursive": true,
+																	"wildcardFolderPath": {
+																		"value": "@concat(     split(json(variables('var_SourceObject')).ObjectOrPath, '\\')[2],     '\\',     split(json(variables('var_SourceObject')).ObjectOrPath, '\\')[3] )",
+																		"type": "Expression"
+																	},
+																	"wildcardFileName": {
+																		"value": "@split(json(variables('var_SourceObject')).ObjectOrPath , '\\')[4]",
+																		"type": "Expression"
+																	},
+																	"enablePartitionDiscovery": false
+																},
+																"formatSettings": {
+																	"type": "DelimitedTextReadSettings"
+																}
+															},
+															"sink": {
+																"type": "ParquetSink",
+																"storeSettings": {
+																	"type": "AzureBlobFSWriteSettings"
+																},
+																"formatSettings": {
+																	"type": "ParquetWriteSettings"
+																}
+															},
+															"enableStaging": false,
+															"translator": {
+																"type": "TabularTranslator",
+																"typeConversion": true,
+																"typeConversionSettings": {
+																	"allowDataTruncation": true,
+																	"treatBooleanAsNumber": false
+																}
+															}
+														},
+														"inputs": [
+															{
+																"referenceName": "DS_SMB_CSV",
+																"type": "DatasetReference",
+																"parameters": {
+																	"pDir": {
+																		"value": "@split(json(variables('var_SourceObject')).ObjectOrPath\n, '\\')[3]",
+																		"type": "Expression"
+																	},
+																	"pFileName": {
+																		"value": "@json(variables('var_SourceObject')).SourceName",
+																		"type": "Expression"
+																	},
+																	"pHeader": {
+																		"value": "@json(json(variables('var_SourceObject')).QueryOrParams).firstRowAsHeader",
+																		"type": "Expression"
+																	},
+																	"pDelimiter": {
+																		"value": "@json(json(variables('var_SourceObject')).QueryOrParams).columnDelimiter",
+																		"type": "Expression"
+																	}
+																}
+															}
+														],
+														"outputs": [
+															{
+																"referenceName": "DS_ADLS_PARQUET",
+																"type": "DatasetReference",
+																"parameters": {
+																	"pSource": "@split(json(variables('var_SourceObject')).TargetPath , '/')[1]",
+																	"pFolder": "@concat(     split(json(variables('var_SourceObject')).TargetPath, '/')[2],     '/',     split(json(variables('var_SourceObject')).TargetPath, '/')[3] )",
+																	"pFileName": "@concat(     json(variables('var_SourceObject')).SourceName,     '_',     formatDateTime(utcNow(), 'yyyyMMddHHmmss') )"
+																}
+															}
+														]
+													}
+												]
+											}
+										]
+									}
+								},
+								{
+									"name": "Capture array from md_Source",
+									"type": "SetVariable",
+									"dependsOn": [],
+									"policy": {
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "var_SourceObject",
+										"value": {
+											"value": "@string(item())",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"pSourceName": {
+						"type": "string",
+						"defaultValue": "ODBC"
+					},
+					"pRunDate": {
+						"type": "string",
+						"defaultValue": "@utcNow()"
+					},
+					"pActiveOnly": {
+						"type": "string",
+						"defaultValue": "1"
+					}
+				},
+				"variables": {
+					"vWaterMark": {
+						"type": "String"
+					},
+					"test": {
+						"type": "String"
+					},
+					"var_SourceObject": {
+						"type": "String"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DS_SQL')]",
+				"[concat(variables('factoryId'), '/datasets/DS_ODBC_SQL')]",
+				"[concat(variables('factoryId'), '/datasets/DS_ADLS_PARQUET')]",
+				"[concat(variables('factoryId'), '/datasets/DS_SMB_CSV')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_JSON')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_REST",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"pRelativeUrl": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "RestResource",
+				"typeProperties": {
+					"relativeUrl": {
+						"value": "@{coalesce(dataset().pRelativeUrl, 'latest')}",
+						"type": "Expression"
+					}
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_REST')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_ODBC_SQL')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_ODBC_LEGACY_SQL",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"pTable": {
+						"type": "string"
+					},
+					"pWhere": {
+						"type": "string"
+					},
+					"pQueryMode": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "OdbcTable",
+				"schema": [],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().pTable",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_ODBC_LEGACY_SQL')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_SMB_CSV')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_LEGACY_SMB",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"pDir": {
+						"type": "string"
+					},
+					"pFileName": {
+						"type": "string"
+					},
+					"pHeader": {
+						"type": "bool"
+					},
+					"pDelimiter": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "FileServerLocation",
+						"fileName": {
+							"value": "@dataset().pFileName",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().pDir",
+							"type": "Expression"
+						}
+					},
+					"columnDelimiter": {
+						"value": "@dataset().pDelimiter",
+						"type": "Expression"
+					},
+					"escapeChar": "\\",
+					"firstRowAsHeader": {
+						"value": "@dataset().pHeader",
+						"type": "Expression"
+					},
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_LEGACY_SMB')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_SQL')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_SQL",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"pSystem": {
+							"value": "@dataset().param_System",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"param_System": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_SQL')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_ADLS')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('LS_ADLS_properties_typeProperties_url')]"
+				},
+				"connectVia": {
+					"referenceName": "Selfhosted-IR",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/Selfhosted-IR')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_AZ_KEY_VAULT')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "This linked service allows connection to KV which holds secrets and is more secure option opposed to having passwords and secrets in plain string",
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('LS_AZ_KEY_VAULT_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_HTTP')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "HttpServer",
+				"typeProperties": {
+					"url": "[parameters('LS_HTTP_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous"
+				},
+				"connectVia": {
+					"referenceName": "Selfhosted-IR",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/Selfhosted-IR')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_LEGACY_SMB')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "FileServer",
+				"typeProperties": {
+					"host": "[parameters('LS_LEGACY_SMB_properties_typeProperties_host')]",
+					"userId": "[parameters('LS_LEGACY_SMB_properties_typeProperties_userId')]",
+					"password": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "LS_AZ_KEY_VAULT",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "Legacy-SMB-Password"
+					}
+				},
+				"connectVia": {
+					"referenceName": "Selfhosted-IR",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/Selfhosted-IR')]",
+				"[concat(variables('factoryId'), '/linkedServices/LS_AZ_KEY_VAULT')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_ODBC_LEGACY_SQL')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "The purpose of this linked service is to connect to Legacy SQL instances",
+				"annotations": [],
+				"type": "Odbc",
+				"typeProperties": {
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "LS_AZ_KEY_VAULT",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "[parameters('LS_ODBC_LEGACY_SQL_properties_typeProperties_connectionString_secretName')]"
+					},
+					"authenticationType": "Basic",
+					"userName": "[parameters('LS_ODBC_LEGACY_SQL_properties_typeProperties_userName')]",
+					"password": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "LS_AZ_KEY_VAULT",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "Legacy-SQL-Password"
+					}
+				},
+				"connectVia": {
+					"referenceName": "Selfhosted-IR",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/Selfhosted-IR')]",
+				"[concat(variables('factoryId'), '/linkedServices/LS_AZ_KEY_VAULT')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_REST')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "RestService",
+				"typeProperties": {
+					"url": "[parameters('LS_REST_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous"
+				},
+				"connectVia": {
+					"referenceName": "Selfhosted-IR",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/Selfhosted-IR')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_SQL')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"parameters": {
+					"pSystem": {
+						"type": "string",
+						"defaultValue": "modern"
+					}
+				},
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"server": "[parameters('LS_SQL_properties_typeProperties_server')]",
+					"database": "[parameters('LS_SQL_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": true,
+					"authenticationType": "SQL",
+					"userName": "[parameters('LS_SQL_properties_typeProperties_userName')]",
+					"password": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "LS_AZ_KEY_VAULT",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": {
+							"value": "@if(\n    equals(linkedService().pSystem, 'legacy'),\n    'Legacy-SQL-Password',\n    if(\n        equals(linkedService().pSystem, 'modern'),\n        'Modern-SQL-Password',\n        ''\n    )\n)",
+							"type": "Expression"
+						}
+					}
+				},
+				"connectVia": {
+					"referenceName": "Selfhosted-IR",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/Selfhosted-IR')]",
+				"[concat(variables('factoryId'), '/linkedServices/LS_AZ_KEY_VAULT')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Selfhosted-IR')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "SelfHosted",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_ADLS_PARQUET')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_ADLS",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"pSource": {
+						"type": "string"
+					},
+					"pFolder": {
+						"type": "string"
+					},
+					"pFileName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().pFileName",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().pFolder",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@dataset().pSource",
+							"type": "Expression"
+						}
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_ADLS')]"
+			]
+		}
+	]
+}

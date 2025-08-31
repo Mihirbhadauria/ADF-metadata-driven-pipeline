@@ -1,0 +1,42 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "de-adf-aues-mdp"
+		},
+		"LS_ADLS_properties_typeProperties_url": {
+			"value": "https://deadlsauesmdp.dfs.core.windows.net/"
+		},
+		"LS_AZ_KEY_VAULT_properties_typeProperties_baseUrl": {
+			"value": "https://de-kv-aues-medp.vault.azure.net/"
+		},
+		"LS_HTTP_properties_typeProperties_url": {
+			"value": "https://api.frankfurter.dev/"
+		},
+		"LS_LEGACY_SMB_properties_typeProperties_host": {
+			"value": "\\\\192.168.10.5\\BaapDataSet"
+		},
+		"LS_LEGACY_SMB_properties_typeProperties_userId": {
+			"value": "FILESERVERNAME\\mihir"
+		},
+		"LS_ODBC_LEGACY_SQL_properties_typeProperties_connectionString_secretName": {
+			"value": "Legacy-SQL-ConnectionString"
+		},
+		"LS_ODBC_LEGACY_SQL_properties_typeProperties_userName": {
+			"value": "adf_instance"
+		},
+		"LS_REST_properties_typeProperties_url": {
+			"value": "https://api.frankfurter.dev/"
+		},
+		"LS_SQL_properties_typeProperties_server": {
+			"value": "@{if(\n    equals(linkedService().pSystem, 'legacy'),\n    'BAAP-WIN11-VM',\n    if(\n        equals(linkedService().pSystem, 'modern'),\n        '192.168.10.235',\n        ''\n    )\n)}"
+		},
+		"LS_SQL_properties_typeProperties_database": {
+			"value": "@{if(\n    equals(linkedService().pSystem, 'legacy'),\n    'LegacyHR',\n    if(\n        equals(linkedService().pSystem, 'modern'),\n        'de_ODS',\n        ''\n    )\n)}"
+		},
+		"LS_SQL_properties_typeProperties_userName": {
+			"value": "@{if(\n    equals(linkedService().pSystem, 'legacy'),\n    'adf_instance',\n    if(\n        equals(linkedService().pSystem, 'modern'),\n        'sa',\n        ''\n    )\n)}"
+		}
+	}
+}
