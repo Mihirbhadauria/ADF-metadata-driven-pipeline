@@ -125,7 +125,6 @@
 														"referenceName": "DS_ADLS_PARQUET",
 														"type": "DatasetReference",
 														"parameters": {
-															"pSource": "bronze",
 															"pFolder": "hr/employees",
 															"pFileName": {
 																"value": "employees_@{formatDateTime(utcNow(), 'yyyyMMddHHmmss')}.parquet",
@@ -150,8 +149,28 @@
 												}
 											}
 										]
+									},
+									{
+										"value": "Case2"
 									}
 								]
+							}
+						},
+						{
+							"name": "Capture array from md_Source",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "var_SourceObject",
+								"value": {
+									"value": "@item()",
+									"type": "Expression"
+								}
 							}
 						}
 					]
@@ -177,6 +196,9 @@
 				"type": "String"
 			},
 			"test": {
+				"type": "String"
+			},
+			"var_SourceObject": {
 				"type": "String"
 			}
 		},
