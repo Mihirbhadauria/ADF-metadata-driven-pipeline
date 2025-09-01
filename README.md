@@ -65,5 +65,4 @@ REST APIs (e.g., external data providers or SaaS apps)
 
 ## 👨‍💻 Author
 
-> Built with 💪 by Mihir Bhadauria
-> Connect with me on [LinkedIn](https://www.linkedin.com/in/mihir-bhadauria/)
+> Built with 💪 by Mihir Bhadauria and you can connect with me on [LinkedIn](https://www.linkedin.com/in/mihir-bhadauria/)
