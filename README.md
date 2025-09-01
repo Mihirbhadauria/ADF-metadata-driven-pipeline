@@ -12,8 +12,6 @@ REST APIs (e.g., external data providers or SaaS apps)
 
 ![ADF Pipeline image](/images/adf_pipeline_1.jpg)
 
-![ADF Pipeline image](/images/adf_pipeline_2.jpg)
-
 ## 🧠 Key Features
 
 **Control Table-Driven Logic:** Ingestion rules and configuration are centrally defined via a metadata table (e.g., md_Source) that drives pipeline execution.
