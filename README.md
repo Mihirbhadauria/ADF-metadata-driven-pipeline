@@ -42,13 +42,13 @@ REST APIs (e.g., external data providers or SaaS apps)
 
 ## 🔧 How to Use
 
-1. Deploy Metadata Table: Use the provided schema to deploy your md_Source table.
+**1. Deploy Metadata Table:** Use the provided schema to deploy your md_Source table.
 
-2. Configure Sources: Populate the metadata table with the source system details (ODBC, REST, SMB).
+**2. Configure Sources:** Populate the metadata table with the source system details (ODBC, REST, SMB).
 
-3. Set up ADF Pipelines: Import pipelines from this repo into ADF.
+**3. Set up ADF Pipelines:** Import pipelines from this repo into ADF.
 
-4. Run Master Pipeline: Triggers ingestion for all active sources dynamically.
+**4. Run Master Pipeline:** Triggers ingestion for all active sources dynamically.
 
 ## 🧩 Sample Metadata Row (for SMB)
 ```json
