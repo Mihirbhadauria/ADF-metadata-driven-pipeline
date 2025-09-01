@@ -10,6 +10,10 @@ SMB shares (e.g., flat files like .csv or pipe-delimited .txt)
 
 REST APIs (e.g., external data providers or SaaS apps)
 
+![ADF Pipeline image](/images/adf_pipeline_1.jpg)
+
+![ADF Pipeline image](/images/adf_pipeline_2.jpg)
+
 ## 🧠 Key Features
 
 **Control Table-Driven Logic:** Ingestion rules and configuration are centrally defined via a metadata table (e.g., md_Source) that drives pipeline execution.
@@ -23,6 +27,8 @@ REST APIs (e.g., external data providers or SaaS apps)
 **Dynamic Pathing & Naming:** Output paths and filenames are generated on-the-fly using metadata, UTC timestamps, etc.
 
 **Parameter Splitting:** QueryOrParams values like delimiter=|;header=true are parsed to extract necessary parameters for flexible ingestion.
+
+![Metadata table image](/images/md_source.jpg)
 
 ## 🧪 Technologies Used
 
