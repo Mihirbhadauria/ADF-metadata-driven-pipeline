@@ -12,17 +12,17 @@ REST APIs (e.g., external data providers or SaaS apps)
 
 ## 🧠 Key Features
 
-Control Table-Driven Logic: Ingestion rules and configuration are centrally defined via a metadata table (e.g., md_Source) that drives pipeline execution.
+**Control Table-Driven Logic:** Ingestion rules and configuration are centrally defined via a metadata table (e.g., md_Source) that drives pipeline execution.
 
-Dynamic Datasets & Linked Services: Supports parameterized datasets and linked services for various source types.
+**Dynamic Datasets & Linked Services:** Supports parameterized datasets and linked services for various source types.
 
-Delta & Full Loads: Supports both Delta loads using watermark columns and Full reloads.
+**Delta & Full Loads:** Supports both Delta loads using watermark columns and Full reloads.
 
-Flexible File Formats: Handles output in formats like parquet, csv, etc.
+**Flexible File Formats:** Handles output in formats like parquet, csv, etc.
 
-Dynamic Pathing & Naming: Output paths and filenames are generated on-the-fly using metadata, UTC timestamps, etc.
+**Dynamic Pathing & Naming:** Output paths and filenames are generated on-the-fly using metadata, UTC timestamps, etc.
 
-Parameter Splitting: QueryOrParams values like delimiter=|;header=true are parsed to extract necessary parameters for flexible ingestion.
+**Parameter Splitting:** QueryOrParams values like delimiter=|;header=true are parsed to extract necessary parameters for flexible ingestion.
 
 ## 🧪 Technologies Used
 
