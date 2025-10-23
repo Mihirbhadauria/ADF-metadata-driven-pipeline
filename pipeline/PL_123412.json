@@ -21,7 +21,7 @@
 						"Content-Type": "application/octet-stream"
 					},
 					"url": {
-						"value": "https://deadlsauesmdp.blob.core.windows.net/raw/test.jpg?sp=r&st=2025-10-23T03:13:00Z&se=2025-10-23T11:28:00Z&spr=https&sv=2024-11-04&sr=c&sig=4yvpgjdKDDa5Snxzw05TOvS44Qhemb5CKvT0vdm7fpY%3D",
+						"value": "https://deadlsauesmdp.blob.core.windows.net/raw/123.jpg?sp=racwlm&st=2025-10-23T03:13:00Z&se=2025-10-23T11:28:00Z&spr=https&sv=2024-11-04&sr=c&sig=yqmtBRwNKo2MRqii9xwA7gJFlznbvFKGv1UFf6AEyqs%3D",
 						"type": "Expression"
 					},
 					"body": {
@@ -29,8 +29,36 @@
 						"type": "Expression"
 					}
 				}
+			},
+			{
+				"name": "Lookup1",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "OdbcSource",
+						"queryTimeout": "02:00:00"
+					},
+					"dataset": {
+						"referenceName": "DS_ODBC_SQL",
+						"type": "DatasetReference"
+					}
+				}
 			}
 		],
+		"variables": {
+			"Base64": {
+				"type": "String"
+			}
+		},
 		"annotations": []
 	}
 }
