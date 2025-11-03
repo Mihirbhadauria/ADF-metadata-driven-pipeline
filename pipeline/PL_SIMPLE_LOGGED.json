@@ -1,9 +1,9 @@
 {
-	"name": "PL_123412",
+	"name": "PL_SIMPLE_LOGGED",
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy data1",
+				"name": "ADLS to SQL",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -49,7 +49,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "DS_SQL",
+						"referenceName": "DS_SQL_LOG_POC",
 						"type": "DatasetReference"
 					}
 				]
