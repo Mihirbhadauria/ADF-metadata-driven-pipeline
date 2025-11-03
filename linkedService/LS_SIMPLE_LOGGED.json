@@ -8,10 +8,10 @@
 			"server": "BAAP-WIN11-VM",
 			"database": "SimpleLogged",
 			"encrypt": "mandatory",
-			"trustServerCertificate": false,
+			"trustServerCertificate": true,
 			"authenticationType": "SQL",
-			"userName": "mihir",
-			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJhZTdkMmIwNy01OTcxLTQzYjItODdlNi0zNzg4ZmZhOGQxYmUiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+			"userName": "adf_instance",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI1Yzg3ZTA4NC0yZTdhLTRmNmEtOGY1MC1hMTczY2M4ZDkzMmEiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
 		},
 		"connectVia": {
 			"referenceName": "Selfhosted-IR",
