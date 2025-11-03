@@ -1,0 +1,12 @@
+{
+	"name": "DS_SQL_LOG_POC",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_SIMPLE_LOGGED",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": []
+	}
+}
