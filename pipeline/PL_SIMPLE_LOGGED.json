@@ -44,7 +44,11 @@
 				"inputs": [
 					{
 						"referenceName": "DS_ADLS_CSV",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"pDirectory": "LOG_POC",
+							"pFileName": "reviews.csv"
+						}
 					}
 				],
 				"outputs": [
