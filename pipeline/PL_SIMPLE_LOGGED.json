@@ -50,7 +50,11 @@
 				"outputs": [
 					{
 						"referenceName": "DS_SQL_LOG_POC",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"pSchema": "dbo",
+							"pTable": "reviews"
+						}
 					}
 				]
 			}
