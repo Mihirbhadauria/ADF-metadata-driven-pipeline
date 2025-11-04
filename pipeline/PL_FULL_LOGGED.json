@@ -67,7 +67,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "DS_SQL_LOG_POC",
+						"referenceName": "DS_SQL_LOG_FULL_POC",
 						"type": "DatasetReference",
 						"parameters": {
 							"pSchema": "dbo",
