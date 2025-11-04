@@ -1,0 +1,21 @@
+{
+	"name": "LS_FULL_LOGGED",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"server": "BAAP-WIN11-VM",
+			"database": "FullLogged",
+			"encrypt": "mandatory",
+			"trustServerCertificate": true,
+			"authenticationType": "SQL",
+			"userName": "adf_instance",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI1MzNmYjY4Zi00ODgyLTRhODEtYjkxZi0yZGQ1MDRkOGYwMjAiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "Selfhosted-IR",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
