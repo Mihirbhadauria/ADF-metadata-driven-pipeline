@@ -1,0 +1,30 @@
+{
+	"name": "DS_SQL_LOG_FULL_POC",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_SIMPLE_LOGGED",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"pSchema": {
+				"type": "string"
+			},
+			"pTable": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": {
+				"value": "@dataset().pSchema",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@dataset().pTable",
+				"type": "Expression"
+			}
+		}
+	}
+}
