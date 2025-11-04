@@ -11,7 +11,7 @@
 			"trustServerCertificate": true,
 			"authenticationType": "SQL",
 			"userName": "adf_instance",
-			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI1MzNmYjY4Zi00ODgyLTRhODEtYjkxZi0yZGQ1MDRkOGYwMjAiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI5OTMxODU3OC0wYzY5LTQ1MTctODZiZS1mZTc1NzUwNjI1NTQiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
 		},
 		"connectVia": {
 			"referenceName": "Selfhosted-IR",
