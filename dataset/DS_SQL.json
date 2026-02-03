@@ -14,10 +14,20 @@
 		"parameters": {
 			"param_System": {
 				"type": "string"
+			},
+			"schemaName": {
+				"type": "string"
+			},
+			"tableName": {
+				"type": "string"
 			}
 		},
 		"annotations": [],
 		"type": "SqlServerTable",
-		"schema": []
+		"schema": [],
+		"typeProperties": {
+			"schema": "schemaName",
+			"table": "tableName"
+		}
 	}
 }
